@@ -279,6 +279,15 @@ a{color:var(--accent)}
 @media (min-width:700px){.sheet-body{padding:36px 24px calc(90px + var(--dock-h))}}
 .sheet-hero{display:grid;gap:8px;margin-bottom:28px}
 .sheet-hero .chip-row{justify-content:flex-start;margin-top:10px}
+/* заголовок разработки = кликабельная кнопка открытия ресурса */
+.title-btn{display:inline-flex;align-items:center;gap:12px;font:inherit;font-weight:inherit;letter-spacing:inherit;
+  color:var(--text);background:none;border:0;padding:0;cursor:pointer;border-radius:10px;
+  transition:color .2s;text-align:left}
+.title-btn .t-ico{display:inline-flex;color:var(--acc-p,var(--accent));opacity:0;transform:translateX(-6px);transition:.2s}
+.title-btn:hover{color:var(--acc-p,var(--accent))}
+.title-btn:hover .t-ico,.title-btn:focus-visible .t-ico{opacity:1;transform:none}
+.title-btn:focus-visible{outline:3px solid var(--accent);outline-offset:4px}
+@media (hover:none){.title-btn .t-ico{opacity:.6;transform:none}} /* на телефонах подсказка видна всегда */
 .sheet-sec{margin-top:34px}
 .sheet-sec h3{font-size:23px;margin-bottom:14px}
 .shots{display:grid;gap:18px;grid-template-columns:1fr}
@@ -779,6 +788,12 @@ function sheetActionsHTML(p){
     ? `<a class="btn" id="sheet-open" href="${resUrl(p.id)}" target="_blank" rel="noopener">Открыть ресурс ${ICONS.ext}</a>`
     : `<button class="btn acc-${p.id}" id="sheet-open" type="button">${ICONS.lock}&nbsp;Открыть ресурс — по коду</button>`;
 }
+/* единая логика «открыть ресурс»: ссылка если разблокировано, окно кода если нет */
+function openResource(id){
+  if (!id) return;
+  if (state.unlocked.has(id)) window.open(resUrl(id), "_blank", "noopener");
+  else openGate(id);
+}
 function renderSheetActions(p){
   const box = $("#sheet-actions");
   if (box) box.innerHTML = sheetActionsHTML(p);
@@ -800,7 +815,7 @@ function openSheet(id){
     <div class="sheet-body">
       <div class="sheet-hero">
         <span class="sec-kicker">${kicker}</span>
-        <h2 id="sheet-title">${esc(p.title)}</h2>
+        <h2 id="sheet-title"><button class="title-btn" id="sheet-title-btn" type="button" title="Открыть ресурс">${esc(p.title)}<span class="t-ico" aria-hidden="true">${ICONS.ext}</span></button></h2>
         <p class="sec-lead">${esc(p.tagline)}</p>
         <div class="chip-row"><span class="chip">${esc(p.audience)}</span><span class="chip">${esc(p.volume)}</span><span class="chip">Автор: Масликов М. М.</span></div>
       </div>
@@ -903,7 +918,8 @@ function bindHandlers(){
   });
   $("#sheet").addEventListener("click", e=>{
     if (e.target.closest("#sheet-close")) closeSheet();
-    else if (e.target.closest("#sheet-open")?.tagName==="BUTTON") openGate(state.sheetId);
+    else if (e.target.closest("#sheet-open")?.tagName==="BUTTON") openResource(state.sheetId);
+    else if (e.target.closest("#sheet-title-btn")) openResource(state.sheetId);
   });
   $("#lb-close").addEventListener("click", closeLb);
   $("#lb-prev").addEventListener("click", ()=>stepLb(-1));
