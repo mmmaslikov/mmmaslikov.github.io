@@ -281,12 +281,15 @@ a{color:var(--accent)}
 .sheet-hero .chip-row{justify-content:flex-start;margin-top:10px}
 /* заголовок разработки = кликабельная кнопка открытия ресурса */
 .title-btn{display:inline-flex;align-items:center;gap:12px;font:inherit;font-weight:inherit;letter-spacing:inherit;
-  color:var(--text);background:none;border:0;padding:0;cursor:pointer;border-radius:10px;
-  transition:color .2s;text-align:left}
-.title-btn .t-ico{display:inline-flex;color:var(--acc-p,var(--accent));opacity:0;transform:translateX(-6px);transition:.2s}
-.title-btn:hover{color:var(--acc-p,var(--accent))}
-.title-btn:hover .t-ico,.title-btn:focus-visible .t-ico{opacity:1;transform:none}
-.title-btn:focus-visible{outline:3px solid var(--accent);outline-offset:4px}
+  color:var(--text);background:none;border:0;border-bottom:2px solid color-mix(in srgb,var(--acc-p,var(--accent)) 45%,transparent);
+  padding:0 2px 4px;cursor:pointer;border-radius:0;
+  transition:color .2s,border-color .2s;text-align:left}
+.title-btn .t-ico{display:inline-flex;color:var(--acc-p,var(--accent));opacity:.55;transform:none;transition:opacity .2s,transform .2s}
+.title-btn:hover,.title-btn:focus-visible{
+  color:var(--acc-p,var(--accent));
+  border-bottom-color:var(--acc-p,var(--accent))}
+.title-btn:hover .t-ico,.title-btn:focus-visible .t-ico{opacity:1;transform:translateX(3px)}
+.title-btn:focus-visible{outline:3px solid var(--accent);outline-offset:4px;border-radius:6px}
 @media (hover:none){.title-btn .t-ico{opacity:.6;transform:none}} /* на телефонах подсказка видна всегда */
 .sheet-sec{margin-top:34px}
 .sheet-sec h3{font-size:23px;margin-bottom:14px}
